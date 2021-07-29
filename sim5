@@ -1,32 +1,31 @@
-install_github('wwrechard/screening')
+library(glmnet)
+library(devtools)
 library(screening)
-n = 1000  #data size
-p = 10 #data dim
-times = 100  #rerun times
-x = matrix(NA, nrow=n,ncol=p)
+library(doParallel)
+registerDoParallel(cores=4)
+n = 10000 #data size
+p = 200 #data dim
 delte.square=0.1
+x = matrix(NA, nrow=n,ncol=p)
 z = matrix(rnorm(n*p), nrow = n,ncol = p)    ##\z_{1} ~ N(0,1)
-
-for(m in 0:4){
-  x[,1+3*m] = z[,1]+rnorm(1,0,sqrt(delte.square))
-  x[,2+3*m] = z[,2]+rnorm(1,0,sqrt(delte.square))
-  x[,3+3*m] = z[,3]+rnorm(1,0,sqrt(delte.square))
-   }
-for(i in 16:p){
-  x[,i]=rnorm(n)
-   }
-
-beta<-numeric(p)
-for(i in 1:15){
-  beta[i]<-3   #生成beta
-   }
-
-r.square<-0.5
-sigma.square<-var(x%*%beta)/r.square
-y <-x%*%beta+rnorm(n,0,sqrt(sigma.square)) ##拟合方程
-output=screening(x, y, method = 'holp', num.select = n, ebic = TRUE)$screen
-
-data.frame<-c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15)
-lag[j]<-sum(data.frame%in%output)==15
+sim5 = function(n,p){
+  for(m in 0:4){
+    x[,1+3*m] = z[,1]+rnorm(1,0,sqrt(delte.square))
+    x[,2+3*m] = z[,2]+rnorm(1,0,sqrt(delte.square))
+    x[,3+3*m] = z[,3]+rnorm(1,0,sqrt(delte.square))
+  }
+  for(i in 16:p){
+    x[,i]=rnorm(n)
+  }
+  beta = c(rep(3,15), rep(0, p-15))
+  r.square<-0.5
+  sigma.square<-var(x%*%beta)/r.square
+  y <-x%*%beta+rnorm(n,0,sqrt(sigma.square)) ##拟合方程
+  output=screening(x, y, method = 'holp', num.select = n, ebic = TRUE)$screen
+  lag<-sum(c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15) %in% output)==15
+  return(lag)
 }
-sum(lag)/times
+
+result = foreach(i=1:100, .combine = "rbind") %do% sim5(n,p) ##rerun 100 times
+
+sum(result)/100
