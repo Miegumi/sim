@@ -1,0 +1,66 @@
+* git_wiki                                                                      :toc:
+  - [[#基本命令][基本命令]]
+
+** 基本命令
+*** 利用 git 上传本地文件、文件夹到 GitHub
+
+- 1.输入自己的用户名和邮箱（为注册 GITHUB 账号时的用户名和邮箱）
+
+#+begin_src git
+$ git config --global user.name "luyajun01@gmail.com"
+$ git config --global user.email "luyajun01@gmail.com"
+#+end_src
+
+- 2.设置 SSH key
+#+begin_src git
+$ cd ~/.ssh
+$ ls
+#+end_src
+如果没有密钥，则执行以下命令来生成密钥：
+
+#+begin_src git
+$ ssh-keygen -t rsa -C "luyajun01@gmail.com"
+#+end_src
+生成过程中按 3 次回车键就好（默认路径，默认没有密码登录），生成成功后，去对应默认路径里用记事本打开 id_rsa.pub，得到 ssh key 公钥。
+
+- 3. clone 仓库
+
+#+begin_src git
+cd ~ //本地目录
+git clone https://github.com/Miegumi/sim.git //clone
+#+end_src
+
+- 4.建立tonylu分支
+
+建立 branch 的目的是团队中个人完成的代码上传需要建立自己的个人分支。
+
+#+begin_src git
+git checkout -b tonylu //建立tonylu分支
+#+end_src
+
+其他相关操作命令：
+
+#+begin_src git
+git checkout master //switch back to master
+git branch -d feature_x //delete the branch again
+#+end_src
+
+- 5.上传文件到对应分支
+
+#+begin_src git
+git add .
+git commit -m "add your files" //添加注释
+git push origin tonylu //上传到tonylu分支
+#+end_src
+
+- 6.完整的操作实例
+
+#+begin_src git
+cd ~ //本地目录
+git clone https://github.com/Miegumi/sim.git //clone 文件到本地目录
+git branch -r //展示当前分支
+git checkout -b tonylu //建立tonylu分支
+git add .
+git commit -m "add your files" //添加注释
+git push origin tonylu //上传到tonylu分支
+#+end_src
