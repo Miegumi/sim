@@ -1,27 +1,30 @@
 library(glmnet)
 library(devtools)
-install_github('wwrechard/screening')
+#install_github('wwrechard/screening')
 library(screening)
-p=100;n=20;
-output.holp=list()
-set.seed(1)
-lag<-numeric(100)
-for(j in 1:100){
-  X=matrix(NA,ncol=p,nrow=n)
-  beta<-numeric(p)
-  u<-rbinom(5,1,0.4)   #u服从伯努利分布
-  for(i in 1:5){
-    beta[i]<-(-1)^u[i]*(abs(rnorm(1))+4*log(n)/sqrt(n))   #生成beta
+library(doParallel)
+registerDoParallel(cores=4)
+
+n=200  #data size
+p=10000 #data dim
+p1 = 5 #有效特征数
+r.square<-0.5
+sim1 = function(n,p,u,r.square){
+ X=matrix(NA,ncol=p,nrow=n)
+ beta<-numeric(p)
+ u<-rbinom(p1,1,0.4)   #u服从伯努利分布
+ for(i in 1:p1){
+   beta[i]<-(-1)^u[i]*(abs(rnorm(1))+4*log(n)/sqrt(n))   #生成beta
   }
-  
-  for (i in 1:n){
-    X[i,]=rnorm(p,0,1)
+ for (i in 1:n){
+   X[i,]=rnorm(p,0,1)
   }
-  r.square<-0.5
-  sigma.square<-var(X%*%beta)/r.square
-  y <- X%*%beta+rnorm(n,0,sqrt(sigma.square))   #拟合回归方程
-  output.holp[[j]]= screening(X, y, method = 'rrcs', num.select = n,ebic = TRUE )
-  output = screening(X, y, method = 'holp', num.select = n, )$screen
-  lag[j]<-sum(c(1,2,3,4,5) %in% output)==5
-}
-sum(lag)/100
+ sigma.square<-var(X%*%beta)/r.square
+ y <- X%*%beta+rnorm(n,0,sqrt(sigma.square))   #拟合回归方程
+ output = screening(X, y, method = 'holp', num.select = n, )$screen
+ lag<-sum(seq(1,p1) %in% output)==5
+ return(lag)
+ }
+result = foreach(i=1:100, .combine = "rbind") %do% sim1(n,p,u,r.square) ##rerun 100 times
+
+sum(result)/100
