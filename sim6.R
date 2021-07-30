@@ -1,32 +1,34 @@
-install_github('wwrechard/screening')
+library(glmnet)
+library(devtools)
 library(screening)
-n = 20
-p = 100
-times = 100
-x = matrix(NA, nrow=n,ncol=p)
+library(doParallel)
+registerDoParallel(cores=4)
+n = 200
+p = 10000
 s=5
-z = matrix(rnorm(n*p), nrow = n,ncol = p)
-w = matrix(rnorm(n*p), nrow = n,ncol = p)
-for(j in 1:times){
-  for(i in 1:5){
-    x[,1]=(z[,1]+x[,1])/sqrt(2)
-    x[,i+s]=x[,i]+rnorm(n,0,0.01)
-    x[,i+2*s]=x[,i]+rnorm(n,0,0.01)
+p1 = 5 #有效特征数
+r.square=0.5
+sim6 = function(n,p,p1,s,r.square){
+  x = matrix(NA, nrow=n,ncol=p)
+  z = matrix(rnorm(n*p), nrow = n,ncol = p)
+  w = matrix(rnorm(n*p), nrow = n,ncol = p)
+  for(i in 1:p1){
+    x[,i]=(z[,i]+x[,i])/sqrt(2)
+    x[,i+s]=x[,i]+rnorm(n,0,sqrt(0.01))
+    x[,i+2*s]=x[,i]+rnorm(n,0,sqrt(0.01))
   }
-  for(i in 16:p){
+  for(i in (p1+2*s+1):p){
     for(j in 1:5){
       x[,i]=(z[,i]+sum(w[,j]))/2
     }
   }
-beta<-numeric(p)
-for(i in 1:5){
-  beta[i]<-5
-}
-r.square<-0.5
-sigma.square<-var(x%*%beta)/r.square
-y <-X%*%beta+rnorm(n,0,sqrt(sigma.square))   #拟合回归方程
-output= screening(X, y, method = 'holp', num.select = n, ebic = TRUE)$screen
-lag[j]<-sum(c(1,2,3,4,5) %in% output)==5
-}
-sum(lag)/100
+  beta = c(rep(5,p1), rep(0, p-p1))
+  sigma.square<-var(x%*%beta)/r.square
+  y <-X%*%beta+rnorm(n,0,sqrt(sigma.square))   #拟合回归方程
+  output= screening(X, y, method = 'holp', num.select = n, ebic = TRUE)$screen
+  lag<-sum(seq(1,p1) %in% output)==5
+   return(lag)
+  }
+result = foreach(i=1:100, .combine = "rbind") %do% sim6(n,p,p1,s,r.square) ##rerun 100 times
   
+sum(result)/100
