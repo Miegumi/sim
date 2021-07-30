@@ -1,24 +1,27 @@
-library(MASS)
-install_github('wwrechard/screening')
+library(glmnet)
+library(devtools)
 library(screening)
-p=1000;n=20;r=0.3
- set.seed(1)
- lag<-numeric(100)
- for(j in 1:100){
-   
+library(MASS)
+library(doParallel)
+registerDoParallel(cores=4)
+n = 200 #data size
+p = 10000 #data dim
+r=0.3 #协方差rou
+r.square<-0.5   ##信噪比
+p1 = 5 #有效特征数
+sim2 = function(n,p,mu,Sigma,r.square,r){
    mu<- rep(0,p)  #均值
-   Sigma <- matrix(r, ncol=p,nrow=p) #协方差r=0.3
+   Sigma <- matrix(r, ncol=p,nrow=p)  #r是协方差
    diag(Sigma)<-1 # 协方差阵的对角线更正为1
    X<- mvrnorm(n=n,mu=mu, Sigma=Sigma)  # 产生服从N（0，Sigmas)的随机数
-   
-   beta<-numeric(p)
-   for(i in 1:5){
-     beta[i]<-5   #生成beta
-   }
-   r.square<-0.5
+   beta= c(rep(5,p1), rep(0, p-p1))
+ 
    sigma.square<-var(X%*%beta)/r.square
    y <-X%*%beta+rnorm(n,0,sqrt(sigma.square))   #拟合回归方程
    output= screening(X, y, method = 'holp', num.select = n, ebic = TRUE)$screen
-   lag[j]<-sum(c(1,2,3,4,5) %in% output)==5
+   lag <-sum(seq(1,p1) %in% output) == 5
+   return(lag)
  }
- sum(lag)/100
+result = foreach(i=1:100, .combine = "rbind") %do% sim2(n,p,mu,Sigma,r.square,r) ##rerun 100 times
+
+sum(result)/100
