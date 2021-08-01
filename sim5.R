@@ -1,6 +1,4 @@
-library(glmnet)
-library(devtools)
-#install_github('wwrechard/screening')
+install_github('luyajun01/screening') #安装新包
 library(glmnet)
 library(devtools)
 library(screening)
@@ -25,7 +23,8 @@ sim5 = function(n,p, p1,delte.square, r.square){
   beta = c(rep(3,p1), rep(0, p-p1))
   sigma.square <- var(x%*%beta)/r.square
   y <- x%*%beta+rnorm(n,0,sqrt(sigma.square)) ##拟合方程
-  output = screening(x, y, method = 'holp', num.select = n, ebic = TRUE)$screen
+  #output = screening::screening(x, y, method = 'holp', num.select = n, ebic = TRUE)$screen #这是r 方法
+  output = myscreening::my_screening(x, y, method = 'holp', num.select = n, ebic = TRUE)$screen #这是C++ 方法
   lag <-sum(seq(1,p1) %in% output) == p1
   return(lag)
 }
