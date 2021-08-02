@@ -141,3 +141,5 @@ git branch -d tonylu //删除本地tonylu分支
 git branch -D tonylu //上面代码跑不同，可以尝试这个代码，强制删除本地tonylu分支
 git push origin --delete tonylu //删除远程tonylu分支
 #+end_src
+
+如果你看不懂上面代码意思，可以参阅这个链接https://chinese.freecodecamp.org/news/how-to-delete-a-git-branch-both-locally-and-remotely/
