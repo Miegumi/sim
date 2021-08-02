@@ -112,3 +112,32 @@ git log -lefg-right branch1...branch2
 #+end_src
 
 注意 commit 后面的箭头，根据我们在 –left-right branch1…branch2 的顺序，左箭头 < 表示是 branch1 的，右箭头 > 表示是branch2的。
+
+
+- 8.删除本地和远程分支
+
+什么时候需要删除分支?
+
+一个 Git 仓库常常有不同的分支，开发者可以在各个分支处理不同的特性，或者在不影响主代码库的情况下修复 bug。
+
+仓库常常有一个 master 分支，表示主代码库。开发人员创建其他分支，处理不同的特性。
+
+开发人员完成处理一个特性之后，常常会删除相应的分支。
+
+如果你还在一个分支上，那么 Git 是不允许你删除这个分支的。所以，请记得退出分支：git checkout master。
+
+当一个分支被推送并合并到远程分支后，-d 才会本地删除该分支。如果一个分支还没有被推送或者合并，那么可以使用-D强制删除它。
+
+这就是本地删除分支的方法。
+
+远程删除分支
+使用这个命令可以远程删除分支：git push <remote> --delete <branch>。
+
+总结下，删除分支可以使用以下命令:
+
+#+begin_src git
+git checkout master
+git branch -d tonylu //删除本地tonylu分支
+git branch -D tonylu //上面代码跑不同，可以尝试这个代码，强制删除本地tonylu分支
+git push origin --delete tonylu //删除远程tonylu分支
+#+end_src
