@@ -16,12 +16,10 @@ sim2 = function(n,p,mu,Sigma,r.square,r){
    diag(Sigma)<-1 # 协方差阵的对角线更正为1
    x<- mvrnorm(n=n,mu=mu, Sigma=Sigma)  # 产生服从N（0，Sigmas)的随机数
    beta= c(rep(5,p1), rep(0, p-p1))
- 
    sigma.square<-var(x%*%beta)/r.square
-   y <-X%*%beta+rnorm(n,0,sqrt(sigma.square))   #拟合回归方程
+   y <-x%*%beta+rnorm(n,0,sqrt(sigma.square))   #拟合回归方程
    #output = screening::screening(x, y, method = 'holp', num.select = n, ebic = TRUE)$screen #这是r 方法
    output = myscreening::my_screening(x, y, method = 'holp', num.select = n, ebic = TRUE)$screen #这是C++ 方法
-   output= screening(x, y, method = 'holp', num.select = n, ebic = TRUE)$screen
    lag <-sum(seq(1,p1) %in% output) == p1
    return(lag)
  }
