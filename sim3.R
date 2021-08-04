@@ -1,5 +1,6 @@
 library(glmnet)
 library(devtools)
+# install_github('luyajun01/screening')
 library(screening)
 library(MASS)
 library(doParallel)
@@ -17,13 +18,13 @@ sim3 = function(n,p,mu,Sigma,r.square,r){
      }
    }
    diag(Sigma)<-1  # 协方差阵的对角线更正为1
-   X<- mvrnorm(n=n,mu=mu, Sigma=Sigma)  # 产生服从N（0，Sigmas)的随机数
+   x<- mvrnorm(n=n,mu=mu, Sigma=Sigma)  # 产生服从N（0，Sigmas)的随机数
    beta<-numeric(p)
    beta[1]=3;beta[4]=1.5;beta[7]=2
    
-   sigma.square<-var(X%*%beta)/r.square
+   sigma.square<-var(x%*%beta)/r.square
    y<-X%*%beta+rnorm(n,0,sqrt(sigma.square))   #拟合回归方程
-   output= screening(X, y, method = 'holp', num.select = n, ebic = TRUE)$screen
+   output= screening(x, y, method = 'holp', num.select = n, ebic = TRUE)$screen
    lag <-sum(c(1,4,7) %in% output)==3
    return(lag)
  }
