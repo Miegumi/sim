@@ -22,7 +22,6 @@ sim1 = function(n,p,u,r.square){
  y <- x%*%beta+rnorm(n,0,sqrt(sigma.square))   #拟合回归方程
  #output = screening::screening(x, y, method = 'holp', num.select = n, ebic = TRUE)$screen #这是r 方法
  output = myscreening::my_screening(x, y, method = 'holp', num.select = n, ebic = TRUE)$screen #这是C++ 方法
- output = screening(x, y, method = 'holp', num.select = n, ebic = TRUE)$screen
  lag<-sum(seq(1,p1) %in% output)==p1
  return(lag)
  }
