@@ -23,8 +23,9 @@ sim3 = function(n,p,mu,Sigma,r.square,r){
    beta[1]=3;beta[4]=1.5;beta[7]=2
    
    sigma.square<-var(x%*%beta)/r.square
-   y<-X%*%beta+rnorm(n,0,sqrt(sigma.square))   #拟合回归方程
-   output= screening(x, y, method = 'holp', num.select = n, ebic = TRUE)$screen
+   y<-x%*%beta+rnorm(n,0,sqrt(sigma.square))   #拟合回归方程
+   #output = screening::screening(x, y, method = 'holp', num.select = n, ebic = TRUE)$screen #这是r 方法
+   output = myscreening::my_screening(x, y, method = 'holp', num.select = n, ebic = TRUE)$screen #这是C++ 方法
    lag <-sum(c(1,4,7) %in% output)==3
    return(lag)
  }
