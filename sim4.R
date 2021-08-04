@@ -1,13 +1,11 @@
 library(glmnet)
 library(devtools)
-#install_github('wwrechard/screening')
+# install_github('luyajun01/screening')
 library(screening)
 library(doParallel)
 registerDoParallel(cores=4)
 n = 200  #data size
 p = 10000 #data dim
-times = 100  #rerun times
-lag<-numeric(100)
 x = matrix(NA, nrow=n,ncol=p)
 k = 2
 p1 = 5 #有效特征数
@@ -25,12 +23,14 @@ sim4 = function(n,p,k,p1,r.square){
   beta = c(rep(5,5), rep(0, p-5))
   sigma.square<-var(x%*%beta)/r.square
   y <-x%*%beta+rnorm(n,0,sqrt(sigma.square)) ##拟合方程
+  #output = screening::screening(x, y, method = 'holp', num.select = n, ebic = TRUE)$screen #这是r 方法
+  output = myscreening::my_screening(x, y, method = 'holp', num.select = n, ebic = TRUE)$screen #这是C++ 方法
   output=screening(x, y, method = 'holp', num.select = n, ebic = TRUE)$screen
-  lag <-sum(seq(1,p1) %in% output) == 5
+  lag <-sum(seq(1,p1) %in% output) == p1
   return(lag)
 }
 
-result = foreach(i=1:10, .combine = "rbind") %do% sim4(p,k,p1,r.square) ##rerun 100 times
+result = foreach(i=1:100, .combine = "rbind") %do% sim4(n,p,k,p1,r.square) ##rerun 100 times
 
 sum(result)/100
 
