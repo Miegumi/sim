@@ -6,11 +6,11 @@ library(doParallel)
 registerDoParallel(cores=4)
 n = 200  #data size
 p = 10000 #data dim
-x = matrix(NA, nrow=n,ncol=p)
 k = 2
 p1 = 5 #有效特征数
 r.square<-0.5  #信噪比
 sim4 = function(n,p,k,p1,r.square){
+  x = matrix(NA, nrow=n,ncol=p)
   phi = matrix(rnorm(n*k), nrow = n,ncol = k)  ##\phi_{1} ~ N(0,1)
   f = matrix(rnorm(p*k), nrow = p,ncol = k)     ##\f_{1} ~ N(0,1)
   eta = matrix(rnorm(n*p), nrow = n,ncol = p)
@@ -19,7 +19,6 @@ sim4 = function(n,p,k,p1,r.square){
       x[,i] = sum(phi[,j]*f[i,]) + eta[,i]
     }
   }
-  
   beta = c(rep(5,5), rep(0, p-5))
   sigma.square<-var(x%*%beta)/r.square
   y <-x%*%beta+rnorm(n,0,sqrt(sigma.square)) ##拟合方程
