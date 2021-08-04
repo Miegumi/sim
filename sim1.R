@@ -8,7 +8,7 @@ n=200  #data size
 p=10000 #data dim
 p1 = 5 #有效特征数
 r.square<-0.5
-sim1 = function(n,p,u,r.square){
+sim1 = function(n,p,p1,r.square){
  x=matrix(NA,ncol=p,nrow=n)
  beta<-numeric(p)
  u<-rbinom(p1,1,0.4)   #u服从伯努利分布
@@ -25,6 +25,6 @@ sim1 = function(n,p,u,r.square){
  lag<-sum(seq(1,p1) %in% output)==p1
  return(lag)
  }
-result = foreach(i=1:100, .combine = "rbind") %do% sim1(n,p,u,r.square) ##rerun 100 times
+result = foreach(i=1:100, .combine = "rbind") %do% sim1(n,p,p1,r.square) ##rerun 100 times
 
 sum(result)/100
