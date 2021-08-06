@@ -3,6 +3,8 @@ library(devtools)
 # install_github('luyajun01/screening')
 library(screening)
 library(doParallel)
+library(dplyr)
+library(myscreening)
 registerDoParallel(cores=4)
 n = 200  #data size
 p = 10000 #data dim
@@ -19,7 +21,8 @@ sim4 = function(n,p,k,p1,r.square){
       x[,i] = sum(phi[,j]*f[i,]) + eta[,i]
     }
   }
-  beta = c(rep(5,5), rep(0, p-5))
+  x<-scale(x)
+  beta = data.matrix(c(rep(5,5), rep(0, p-5)))
   sigma.square<-var(x%*%beta)/r.square
   y <-x%*%beta+rnorm(n,0,sqrt(sigma.square)) ##拟合方程
   #output = screening::screening(x, y, method = 'holp', num.select = n, ebic = TRUE)$screen #这是r 方法
