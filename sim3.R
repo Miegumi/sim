@@ -4,6 +4,8 @@ library(devtools)
 library(screening)
 library(MASS)
 library(doParallel)
+library(dplyr)
+library(myscreening)
 registerDoParallel(cores=4)
 n = 200 #data size
 p = 10000 #data dim
@@ -19,6 +21,7 @@ sim3 = function(n,p,r.square,r){
    }
    diag(Sigma)<-1  # 协方差阵的对角线更正为1
    x<- mvrnorm(n=n,mu=mu, Sigma=Sigma)  # 产生服从N（0，Sigmas)的随机数
+   scale(x,center = TRUE,scale = TRUE)
    beta<-numeric(p)
    beta[1]=3;beta[4]=1.5;beta[7]=2
    sigma.square<-var(x%*%beta)/r.square
