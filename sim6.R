@@ -5,6 +5,8 @@ library(myscreening)
 ## install_github('luyajun01/screening')
 library(screening)
 library(doParallel)
+library(dplyr)
+library(myscreening)
 registerDoParallel(cores=4)
 n = 200
 p = 10000
@@ -28,6 +30,7 @@ r.square=0.5
       x[,i]=(z[,i]+sum(w[,j]))/2
     }
   }
+  x<-scale(x)
   beta = data.matrix(c(rep(5,p1), rep(0, p-p1)))
   sigma.square<-var(x%*%beta)/r.square ##这个方差全为NA,有问题
   y <-x%*%beta + rnorm(n,0,sqrt(sigma.square))   #拟合回归方程
