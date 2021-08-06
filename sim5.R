@@ -3,6 +3,8 @@ library(glmnet)
 library(devtools)
 library(screening)
 library(doParallel)
+library(dplyr)
+library(myscreening)
 registerDoParallel(cores=4)
 n = 10000 #data size
 p = 200 #data dim
@@ -20,7 +22,8 @@ sim5 = function(n,p, p1,delte.square, r.square){
   for(i in (p1+1):p){
     x[,i]=rnorm(n)
   }
-  beta = c(rep(3,p1), rep(0, p-p1))
+  x<-scale(x)
+  beta = data.matrix(c(rep(3,p1), rep(0, p-p1)))
   sigma.square <- var(x%*%beta)/r.square
   y <- x%*%beta+rnorm(n,0,sqrt(sigma.square)) ##拟合方程
   #output = screening::screening(x, y, method = 'holp', num.select = n, ebic = TRUE)$screen #这是r 方法
