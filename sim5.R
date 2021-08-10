@@ -6,8 +6,8 @@ library(doParallel)
 library(dplyr)
 library(myscreening)
 registerDoParallel(cores=4)
-n = 10000 #data size
-p = 200 #data dim
+n = 200 #data size
+p = 10000 #data dim
 p1 = 15 #有效特征数
 delte.square=0.1
 r.square = 0.5
