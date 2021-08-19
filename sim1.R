@@ -2,6 +2,8 @@ library(glmnet)
 library(devtools)
 # install_github('luyajun01/screening')
 library(screening)
+library(dplyr)
+library(myscreening)
 library(doParallel)
 registerDoParallel(cores=4)
 n=200  #data size
