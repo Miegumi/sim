@@ -14,14 +14,12 @@ s=5
 p1 = 5 #有效特征数
 r.square=0.5
 
-##function debug 时,你可以将function 注释掉,一步一步跑看下每步结果是否正常
-
-#sim6 = function(n,p,p1,s,r.square){
+sim6 = function(n,p,p1,s,r.square){
   x = matrix(NA, nrow=n,ncol=p)
   z = matrix(rnorm(n*p), nrow = n,ncol = p)
   w = matrix(rnorm(n*p), nrow = n,ncol = p)
   for(i in 1:p1){
-    x[,i]=(z[,i]+x[,i])/sqrt(2)
+    x[,i]=(z[,i]+w[,i])/sqrt(2)
     x[,i+s]=x[,i]+rnorm(n,0,sqrt(0.01))
     x[,i+2*s]=x[,i]+rnorm(n,0,sqrt(0.01))
   }
