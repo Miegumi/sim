@@ -43,13 +43,13 @@ prob_rrcs=length(output_holp[which(output_rrcs<=5)])/p1
 prob_isis=length(output_holp[which(output_isis<=5)])/p1
 prob_forward=length(output_holp[which(output_forward<=5)])/p1
  
-return(list(prob_holp,prob_sis,prob_rrcs,prob_forward))
+return(list(prob_holp,prob_sis,prob_rrcs,prob_isis,prob_forward))
 }
 result_holp = foreach(i=1:100, .combine = "rbind") %do% sim1(n,p,p1,r.square)$prob_holp   ##rerun 100 times
 result_sis = foreach(i=1:100, .combine = "rbind") %do% sim1(n,p,p1,r.square)$prob_sis
 result_rrcs = foreach(i=1:100, .combine = "rbind") %do% sim1(n,p,p1,r.square)$prob_rrcs
-result_isis = foreach(i=1:100, .combine = "rbind") %do% sim1(n,p,p1,r.square)$lag_isis
-result_forward = foreach(i=1:100, .combine = "rbind") %do% sim1(n,p,p1,r.square)$lag_forward
+result_isis = foreach(i=1:100, .combine = "rbind") %do% sim1(n,p,p1,r.square)$prob_isis
+result_forward = foreach(i=1:100, .combine = "rbind") %do% sim1(n,p,p1,r.square)$prob_forward
 
 sum(result_holp)/100
 sum(result_sis)/100
