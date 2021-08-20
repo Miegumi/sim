@@ -32,29 +32,28 @@ sim1 = function(n,p,p1,r.square){
   
  ##以下为c++方法
  output_holp = myscreening::my_screening(x, y, method = 'holp', num.select = n, ebic = TRUE)$screen #这是C++ 方法
- #output_sis = myscreening::my_screening(x, y, method = 'sis', num.select = n, ebic = TRUE)$screen #这是C++ 方法
- #output_rrcs = myscreening::my_screening(x, y, method = 'rrcs', num.select = n, ebic = TRUE)$screen #这是C++ 方法
- #output_isis = SIS::SIS(x,y,family='gaussian', tune='bic',iter=TRUE)$ix #这是C++ 方法
- #output_forward = myscreening::my_screening(x, y, method = 'forward', num.select = n, ebic = TRUE)$screen #这是C++ 方法
+ output_sis = myscreening::my_screening(x, y, method = 'sis', num.select = n, ebic = TRUE)$screen #这是C++ 方法
+ output_rrcs = myscreening::my_screening(x, y, method = 'rrcs', num.select = n, ebic = TRUE)$screen #这是C++ 方法
+ output_isis = SIS::SIS(x,y,family='gaussian', tune='bic',iter=TRUE)$ix #这是C++ 方法
+ output_forward = myscreening::my_screening(x, y, method = 'forward', num.select = n, ebic = TRUE)$screen #这是C++ 方法
  
- lag_holp<-sum(seq(1,p1) %in% output_holp)==p1
- #lag_sis<-sum(seq(1,p1) %in% output_sis)==p1
- #lag_rrcs<-sum(seq(1,p1) %in% output_rrcs)==p1
- #lag_isis<-sum(seq(1,p1) %in% output_isis)==p1
- #lag_forward<-sum(seq(1,p1) %in% output_forward)==p1
+prob_holp=length(output_holp[which(output_holp<=5)])/p1
+prob_sis=length(output_holp[which(output_sis<=5)])/p1
+prob_rrcs=length(output_holp[which(output_rrcs<=5)])/p1
+prob_isis=length(output_holp[which(output_isis<=5)])/p1
+prob_forward=length(output_holp[which(output_forward<=5)])/p1
  
- #return(list(lag_holp,lag_sis,lag_rrcs,lag_isis,lag_forward))
- return(lag_holp)
- }
-result_holp = foreach(i=1:100, .combine = "rbind") %do% sim1(n,p,p1,r.square)    ##rerun 100 times
-#result_sis = foreach(i=1:100, .combine = "rbind") %do% sim1(n,p,p1,r.square)$lag_sis
-#result_rrcs = foreach(i=1:100, .combine = "rbind") %do% sim1(n,p,p1,r.square)$lag_rrcs
-#result_isis = foreach(i=1:100, .combine = "rbind") %do% sim1(n,p,p1,r.square)$lag_isis
-#result_forward = foreach(i=1:100, .combine = "rbind") %do% sim1(n,p,p1,r.square)$lag_forward
+return(list(prob_holp,prob_sis,prob_rrcs,prob_forward))
+}
+result_holp = foreach(i=1:100, .combine = "rbind") %do% sim1(n,p,p1,r.square)$prob_holp   ##rerun 100 times
+result_sis = foreach(i=1:100, .combine = "rbind") %do% sim1(n,p,p1,r.square)$prob_sis
+result_rrcs = foreach(i=1:100, .combine = "rbind") %do% sim1(n,p,p1,r.square)$prob_rrcs
+result_isis = foreach(i=1:100, .combine = "rbind") %do% sim1(n,p,p1,r.square)$lag_isis
+result_forward = foreach(i=1:100, .combine = "rbind") %do% sim1(n,p,p1,r.square)$lag_forward
 
 sum(result_holp)/100
-#sum(result_sis)/100
-#sum(result_rrcs)/100
-#sum(result_isis)/100
-#sum(result_forward)/100
+sum(result_sis)/100
+sum(result_rrcs)/100
+sum(result_isis)/100
+sum(result_forward)/100
 
