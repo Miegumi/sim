@@ -37,6 +37,7 @@ sim1 = function(n,p,p1,r.square){
  output_isis = SIS::SIS(x,y,family='gaussian', tune='bic',iter=TRUE)$ix #这是C++ 方法
  output_forward = myscreening::my_screening(x, y, method = 'forward', num.select = n, ebic = TRUE)$screen #这是C++ 方法
  
+ ##计算运行一次的概率
 prob_holp=length(output_holp[which(output_holp<=5)])/p1
 prob_sis=length(output_holp[which(output_sis<=5)])/p1
 prob_rrcs=length(output_holp[which(output_rrcs<=5)])/p1
