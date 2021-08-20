@@ -18,7 +18,7 @@ sim1 = function(n,p,p1,r.square){
    beta[i]<-(-1)^u[i]*(abs(rnorm(1))+4*log(n)/sqrt(n))   #生成beta
   }
  for (j in 1:p){
-   x[,j]=rnorm(p,0,1)
+   x[,j]=rnorm(n,0,1)
   }
  sigma.square<-var(x%*%beta)/r.square
  y <- x%*%beta+rnorm(n,0,sqrt(sigma.square))   #拟合回归方程
