@@ -46,7 +46,7 @@ sim1 = function(n,p,p1,r.square){
  #return(list(lag_holp,lag_sis,lag_rrcs,lag_isis,lag_forward))
  return(lag_holp)
  }
-result_holp = foreach(i=1:100, .combine = "rbind") %do% sim1(n,p,p1,r.square)$lag_holp ##rerun 100 times
+result_holp = foreach(i=1:100, .combine = "rbind") %do% sim1(n,p,p1,r.square)    ##rerun 100 times
 #result_sis = foreach(i=1:100, .combine = "rbind") %do% sim1(n,p,p1,r.square)$lag_sis
 #result_rrcs = foreach(i=1:100, .combine = "rbind") %do% sim1(n,p,p1,r.square)$lag_rrcs
 #result_isis = foreach(i=1:100, .combine = "rbind") %do% sim1(n,p,p1,r.square)$lag_isis
