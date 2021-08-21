@@ -1,6 +1,7 @@
 library(glmnet)
 library(devtools)
-# install_github('luyajun01/screening')
+install_github('luyajun01/MyPackages/myscreening')
+install_github('luyajun01/MyPackages/lyjtools')
 library(screening)
 library(dplyr)
 library(myscreening)
@@ -16,7 +17,7 @@ sim2 = function(n,p,mu,Sigma,r.square,r){
    mu<- rep(0,p)  #均值
    Sigma <- matrix(r, ncol=p,nrow=p)  #r是协方差
    diag(Sigma)<-1 # 协方差阵的对角线更正为1
-   x<- mvrnorm(n=n,mu=mu, Sigma=Sigma)  # 产生服从N（0，Sigmas)的随机数
+   x<- lyjtools::mymvrnorm(n=n,mu=mu, Sigma=Sigma)  # 产生服从N（0，Sigmas)的随机数
    beta= c(rep(5,p1), rep(0, p-p1))
    sigma.square<-var(x%*%beta)/r.square
    y <-x%*%beta+rnorm(n,0,sqrt(sigma.square))   #拟合回归方程
