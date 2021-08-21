@@ -40,23 +40,25 @@ sim3 = function(n,p,r.square,r){
    output_isis = SIS::SIS(x,y,family='gaussian', tune='bic',iter=TRUE)$ix #这是C++ 方法
    output_forward = myscreening::my_screening(x, y, method = 'forward', num.select = n, ebic = TRUE)$screen #这是C++ 方法
    
-lag_holp<-sum(c(1,4,7) %in% output_holp)==3
-lag_sis<-sum(c(1,4,7) %in% output_sis)==3
-lag_rrcs<-sum(c(1,4,7) %in% output_rrcs)==3
-lag_isis<-sum(c(1,4,7) %in% output_isis)==3
-lag_forward<-sum(c(1,4,7) %in% output_forward)==3
+   prob_holp=length(output_holp[which(output_holp=1|output_holp=4|output_holp=7)])/3
+   prob_sis=length(output_holp[which(output_holp=1|output_holp=4|output_holp=7)])/3
+   prob_rrcs=length(output_holp[which(output_holp=1|output_holp=4|output_holp=7)])/3
+   prob_isis=length(output_holp[which(output_holp=1|output_holp=4|output_holp=7)])/3
+   prob_forward=length(output_holp[which(output_holp=1|output_holp=4|output_holp=7)])/3
 
-return(list(lag_holp,lag_sis,lag_rrcs,lag_isis,lag_forward))
-}
-result_holp = foreach(i=1:100, .combine = "rbind") %do% sim3(n,p,r.square,r)$lag_holp ##rerun 100 times
-result_sis = foreach(i=1:100, .combine = "rbind") %do% sim3(n,p,r.square,r)$lag_sis
-result_rrcs = foreach(i=1:100, .combine = "rbind") %do% sim3(n,p,r.square,r)$lag_rrcs
-result_isis = foreach(i=1:100, .combine = "rbind") %do% sim3(n,p,r.square,r)$lag_isis
-result_forward = foreach(i=1:100, .combine = "rbind") %do% sim3(n,p,r.square,r)$lag_forward
+  return(list(prob_holp,prob_sis,prob_rrcs,prob_isis,prob_forward))
+  }
+result_holp = foreach(i=1:100, .combine = "rbind") %do% sim3(n,p,r.square,r)$prob_holp   ##rerun 100 times
+result_sis = foreach(i=1:100, .combine = "rbind") %do% sim3(n,p,r.square,r)$prob_sis
+result_rrcs = foreach(i=1:100, .combine = "rbind") %do% sim3(n,p,r.square,r)$prob_rrcs
+result_isis = foreach(i=1:100, .combine = "rbind") %do% sim3(n,p,r.square,r)$prob_isis
+result_forward = foreach(i=1:100, .combine = "rbind") %do% sim3(n,p,r.square,r)$prob_forward
 
 sum(result_holp)/100
 sum(result_sis)/100
 sum(result_rrcs)/100
 sum(result_isis)/100
 sum(result_forward)/100
+   
+
 
