@@ -16,7 +16,7 @@ mu<- rep(0,p)  #均值
 Sigma <- matrix(NA, ncol=p,nrow=p)
    for(i in 1:p){ 
      for(j in 1:p){
-       Sigma[m,n]=r^abs(m-n)   
+       Sigma[i,j]=r^abs(i-j)   
      }
    }
 
