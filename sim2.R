@@ -14,7 +14,7 @@ r=0.3 #协方差rou
 r.square<-0.5   ##信噪比
 p1 = 5 #有效特征数
 sim2 = function(n,p,mu,Sigma,r.square,r){
-   mu<- rep(0,p)  #均值
+   mu<- rep(0,p)  #均值                                                                        #######老师，17-19行是不是应该放function外面
    Sigma <- matrix(r, ncol=p,nrow=p)  #r是协方差
    diag(Sigma)<-1 # 协方差阵的对角线更正为1
    x<- lyjtools::mymvrnorm(n=n,mu=mu, sigma=Sigma)  # 产生服从N（0，Sigmas)的随机数
