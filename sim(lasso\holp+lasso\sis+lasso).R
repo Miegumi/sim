@@ -50,9 +50,8 @@ sim2 = function(n,p,mu,Sigma,r.square,r){
   return(list(mse=mse,mse_holp=mse_holp,mse_sis=mse_sis))
 }
 
-result_mse= foreach(i=1:100, .combine = "rbind") %do% sim2(n,p,mu,Sigma,r.square,r)$mse ##rerun 100 times
-result_mse_holp=foreach(i=1:100, .combine = "rbind") %do% sim2(n,p,mu,Sigma,r.square,r)$mse_holp
-result_mse_sis=foreach(i=1:100, .combine = "rbind") %do% sim2(n,p,mu,Sigma,r.square,r)$mse_sis
-sum(result_mse)/100
-sum(result_mse_holp)/100
-sum(result_mse_sis)/100
+result= foreach(i=1:100, .combine = "rbind") %do% sim2(n,p,mu,Sigma,r.square,r) ##rerun 100 times
+
+sum(result$mse)/100
+sum(result$mse_holp)/100
+sum(result$mse_sis)/100
