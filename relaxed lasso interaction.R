@@ -75,5 +75,4 @@ rlasso=function(X, y,lambda,gamma=0.5){
 rlasso(X=x,y=y,lambda=1,gamma=0.5)
 
 
-r2 = y-((theta[-1,-2]%*%theta[-2,-1])/2)%*%x[,c(-1,-2)]
 
